@@ -8,13 +8,10 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 export default function App() {
     const scroll = useRef(new Animated.Value(0)).current;
-    const translateHeader = scroll.interpolate({
-        inputRange: [0, HEADER_SCROLL_DISTANCE],
-        outputRange: [0, -HEADER_SCROLL_DISTANCE],
-        extrapolate: 'clamp',
-    });
+    const headerDiffClamp = Animated.diffClamp(scroll, 0, HEADER_SCROLL_DISTANCE);
+    const translateHeader = Animated.multiply(headerDiffClamp, -1);
     const translateHeaderText = Animated.multiply(translateHeader, -1.5);
-    const fadeOut = scroll.interpolate({
+    const fadeOut = headerDiffClamp.interpolate({
         inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
         outputRange: [1, 0],
         extrapolate: 'clamp',
